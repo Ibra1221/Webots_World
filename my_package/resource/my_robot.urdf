@@ -1,0 +1,220 @@
+<?xml version="1.0" ?>
+<robot name="my_robot">
+    <!-- Base Link -->
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.16" radius="0.09"/>
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="2.5"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <inertia ixx="0.003" iyy="0.003" izz="0.003" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
+
+    <!-- Lidar Link -->
+    <link name="lidar"/>
+    <joint name="base_to_lidar" type="fixed">
+        <parent link="base_link"/>
+        <child link="lidar"/>
+        <origin xyz="0 0 0.18" rpy="0 0 0"/>
+    </joint>
+
+    <!-- IMU Link -->
+    <link name="imu_link"/>
+    <joint name="base_to_imu" type="fixed">
+        <parent link="base_link"/>
+        <child link="imu_link"/>
+        <origin xyz="0 0 0.16" rpy="0 0 0"/>
+    </joint>
+
+    <!-- Range Finder Link -->
+    <link name="rangefinder_link"/>
+    <joint name="base_to_rangefinder" type="fixed">
+        <parent link="base_link"/>
+        <child link="rangefinder_link"/>
+        <origin xyz="0.05 0 0.12" rpy="0 0 0"/>
+    </joint>
+
+    <!-- Range Finder Optical Frame -->
+    <link name="rangefinder_optical_frame"/>
+    <joint name="rangefinder_to_optical" type="fixed">
+        <parent link="rangefinder_link"/>
+        <child link="rangefinder_optical_frame"/>
+        <origin xyz="0 0 0" rpy="-1.5707963267948966 0 -1.5707963267948966"/>
+    </joint>
+
+    <!-- Camera Left Link -->
+    <link name="camera_left_link"/>
+    <joint name="base_to_camera_left" type="fixed">
+        <parent link="base_link"/>
+        <child link="camera_left_link"/>
+        <origin xyz="0.05 0.0375 0.12" rpy="0 0 0"/>
+    </joint>
+
+    <!-- Camera Left Optical Frame -->
+    <link name="camera_left_optical_frame"/>
+    <joint name="camera_left_to_optical" type="fixed">
+        <parent link="camera_left_link"/>
+        <child link="camera_left_optical_frame"/>
+        <origin xyz="0 0 0" rpy="-1.5707963267948966 0 -1.5707963267948966"/>
+    </joint>
+
+    <!-- Camera Right Link -->
+    <link name="camera_right_link"/>
+    <joint name="base_to_camera_right" type="fixed">
+        <parent link="base_link"/>
+        <child link="camera_right_link"/>
+        <origin xyz="0.05 -0.0375 0.12" rpy="0 0 0"/>
+    </joint>
+
+    <!-- Camera Right Optical Frame -->
+    <link name="camera_right_optical_frame"/>
+    <joint name="camera_right_to_optical" type="fixed">
+        <parent link="camera_right_link"/>
+        <child link="camera_right_optical_frame"/>
+        <origin xyz="0 0 0" rpy="-1.5707963267948966 0 -1.5707963267948966"/>
+    </joint>
+
+    <!-- Left Wheel Link -->
+    <link name="left_wheel_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.02" radius="0.05"/>
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.5"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
+
+    <joint name="left_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="left_wheel_link"/>
+        <origin xyz="0 0.09 0.05" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+    </joint>
+
+    <!-- Right Wheel Link -->
+    <link name="right_wheel_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.02" radius="0.05"/>
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.5"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
+
+    <joint name="right_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="right_wheel_link"/>
+        <origin xyz="0 -0.09 0.05" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+    </joint>
+
+    <!-- Webots devices -->
+    <webots>
+        <!-- Distance Sensors -->
+        <device reference="ds0" type="DistanceSensor">
+            <ros>
+                <topicName>/left_sensor</topicName>
+                <alwaysOn>true</alwaysOn>
+            </ros>
+        </device>
+        <device reference="ds1" type="DistanceSensor">
+            <ros>
+                <topicName>/right_sensor</topicName>
+                <alwaysOn>true</alwaysOn>
+            </ros>
+        </device>
+
+        <!-- Lidar -->
+        <device reference="lidar" type="Lidar">
+            <ros>
+                <topicName>/scan</topicName>
+                <alwaysOn>true</alwaysOn>
+                <frameName>lidar</frameName>
+            </ros>
+        </device>
+
+        <!-- IMU -->
+        <device reference="imu" type="InertialUnit">
+            <ros>
+                <topicName>/imu/data</topicName>
+                <alwaysOn>true</alwaysOn>
+                <frameName>imu_link</frameName>
+            </ros>
+        </device>
+
+        <!-- Gyro -->
+        <device reference="gyro" type="Gyro">
+            <ros>
+                <topicName>/gyro</topicName>
+                <alwaysOn>true</alwaysOn>
+            </ros>
+        </device>
+
+        <!-- Accelerometer -->
+        <device reference="accelerometer" type="Accelerometer">
+            <ros>
+                <topicName>/accelerometer</topicName>
+                <alwaysOn>true</alwaysOn>
+            </ros>
+        </device>
+
+        <!-- Range Finder (Depth) -->
+        <device reference="rangefinder" type="RangeFinder">
+            <ros>
+                <topicName>/camera/depth/image_raw</topicName>
+                <alwaysOn>true</alwaysOn>
+                <frameName>rangefinder_optical_frame</frameName>
+            </ros>
+        </device>
+
+        <!-- Left Camera (RGB) -->
+        <device reference="camera_left" type="Camera">
+            <ros>
+                <topicName>/camera/left/image_raw</topicName>
+                <alwaysOn>true</alwaysOn>
+                <frameName>camera_left_optical_frame</frameName>
+            </ros>
+        </device>
+
+        <!-- Right Camera (RGB) -->
+        <device reference="camera_right" type="Camera">
+            <ros>
+                <topicName>/camera/right/image_raw</topicName>
+                <alwaysOn>true</alwaysOn>
+                <frameName>camera_right_optical_frame</frameName>
+            </ros>
+        </device>
+
+        <!-- Left Wheel Encoder -->
+        <device reference="left wheel sensor" type="PositionSensor">
+        <ros>
+            <topicName>/left_wheel/encoder</topicName>
+            <alwaysOn>true</alwaysOn>
+        </ros>
+        </device>
+
+        <!-- Right Wheel Encoder -->
+        <device reference="right wheel sensor" type="PositionSensor">
+        <ros>
+            <topicName>/right_wheel/encoder</topicName>
+            <alwaysOn>true</alwaysOn>
+        </ros>
+        </device>
+
+
+        <!-- Custom Driver Plugin -->
+        <plugin type="my_package.my_robot_driver.MyRobotDriver"/>
+    </webots>
+</robot>
