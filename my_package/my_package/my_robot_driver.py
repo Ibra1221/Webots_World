@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Twist, Vector3, Quaternion, Point
+from geometry_msgs.msg import Twist, TwistStamped, Vector3, Quaternion, Point
 from nav_msgs.msg import Odometry
 from tf_transformations import quaternion_from_euler
 from tf2_ros import TransformBroadcaster
@@ -50,7 +50,7 @@ class MyRobotDriver:
         
 
         # Subscribe to cmd_vel
-        self.__node.create_subscription(Twist, 'cmd_vel', self.__cmd_vel_callback, 1)
+        self.__node.create_subscription(TwistStamped, 'cmd_vel', self.__cmd_vel_callback, 1)
 
         self.left_enc_pub = self.__node.create_publisher(Int32, 'left_wheel/encoder', 10)
         self.right_enc_pub = self.__node.create_publisher(Int32, 'right_wheel/encoder', 10)
@@ -70,8 +70,8 @@ class MyRobotDriver:
         self.imu_pub = self.__node.create_publisher(Imu, 'imu/data', 10)
         
 
-    def __cmd_vel_callback(self, twist):
-        self.__target_twist = twist
+    def __cmd_vel_callback(self, twist: TwistStamped):
+        self.__target_twist = twist.twist
 
     def step(self):
         # Process cmd_vel messages
