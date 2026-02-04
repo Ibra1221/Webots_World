@@ -122,6 +122,7 @@
 
     <!-- Webots devices -->
     <webots>
+
         <!-- Distance Sensors -->
         <device reference="ds0" type="DistanceSensor">
             <ros>

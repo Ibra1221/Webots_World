@@ -5,7 +5,7 @@ from nav_msgs.msg import Odometry
 from tf_transformations import quaternion_from_euler
 from tf2_ros import TransformBroadcaster
 from geometry_msgs.msg import TransformStamped
-from sensor_msgs.msg import Imu
+from sensor_msgs.msg import Imu, JointState
 import math
 import time
 from std_msgs.msg import Int32, Float32
@@ -68,6 +68,9 @@ class MyRobotDriver:
         
         
         self.imu_pub = self.__node.create_publisher(Imu, 'imu/data', 10)
+        
+        # ADD THIS: Joint state publisher
+        self.joint_state_pub = self.__node.create_publisher(JointState, 'joint_states', 10)
         
 
     def __cmd_vel_callback(self, twist: TwistStamped):
@@ -153,6 +156,13 @@ class MyRobotDriver:
         self.left_enc_pub.publish(Int32(data=left_ticks))
         self.right_enc_pub.publish(Int32(data=right_ticks))  # OR Int32(right_ticks)
 
+        # ADD THIS: Publish joint states
+        joint_state_msg = JointState()
+        joint_state_msg.header.stamp = self.__node.get_clock().now().to_msg()
+        joint_state_msg.name = ['left_wheel_joint', 'right_wheel_joint']
+        joint_state_msg.position = [left_pos, right_pos]
+        joint_state_msg.velocity = [left_vel, right_vel]
+        self.joint_state_pub.publish(joint_state_msg)
 
         # Publish TF
         t = TransformStamped()

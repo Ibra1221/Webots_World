@@ -44,10 +44,16 @@ def generate_launch_description():
         executable='obstacle_avoider',
     )
 
+    localization_controller = Node(
+        package='my_package',
+        executable='odom_controller_node',
+    )
+
     return LaunchDescription([
         webots,
         my_robot_driver,
         #  obstacle_avoider, Optional
+        localization_controller,
         static_tf_map,
         robot_state_publisher,     
         launch.actions.RegisterEventHandler(

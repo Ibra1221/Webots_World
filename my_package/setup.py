@@ -24,6 +24,7 @@ setup(
         'console_scripts': [
             'my_robot_driver = my_package.my_robot_driver:main',
             'obstacle_avoider = my_package.obstacle_avoider:main',
+            'odom_controller_node = my_package.localization_control:main',
         ],
     },
 )
